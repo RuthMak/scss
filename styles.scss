@@ -1,6 +1,103 @@
-/* Exercise 1: Interpolation and Mixin */
 @mixin button-style($font-size, $width, $bg-color, $name) {
-    .btn-#{$name} {
+    .btn-#{$name} {// Mixin for button styles
+@mixin btn($font-size, $width, $bg-color, $name) {
+  font-size: $font-size;
+  width: $width;
+  background-color: $bg-color;
+  color: purple;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+// Font size list
+$font-sizes: 100%, 110%, 120%, 130%, 140%;
+
+// Create button class for .btn
+.btn {
+  @include btn(16px, 200px, lightgreen, "default");
+}
+
+// Heading size mixin using nth() to get percentage values
+@mixin heading-size($level) {
+  font-size: nth($font-sizes, $level - 5);
+}
+
+// Generate headings (h6 to h10) with font sizes ranging from 100% to 140%
+@for $i from 6 through 10 {
+  h#{$i} {
+    @include heading-size($i);
+  }
+}
+
+// Create buttons with dynamic names using interpolation
+@each $name in "important", "warning", "success", "info" {
+  .btn-#{$name} {
+    @include btn(16px, 200px, 
+      if($name == "important", red, 
+        if($name == "warning", yellow, 
+          if($name == "success", green, blue))),
+      $name);
+  }
+}
+
+// Days of the week with themes
+$days: (
+  "Monday" : red,
+  "Tuesday" : blue,
+  "Wednesday" : yellow,
+  "Thursday" : green,
+  "Friday" : purple,
+  "Saturday" : orange,
+  "Sunday" : pink
+);
+
+@each $day, $color in $days {
+  .day-#{$day} {
+    background-color: $color;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+  }
+}
+
+// Generate font-weight classes using @for
+@for $i from 1 through 10 {
+  .font#{$i} {
+    font-weight: $i * 100;
+  }
+}
+
+// Basketball team color classes using @each
+$teams: (
+  "UConn" : #004b87,
+  "Duke" : #0000ff,
+  "Kansas" : #e4002b,
+  "Michigan State" : #18453b
+);
+
+@each $team, $color in $teams {
+  .team-#{$team} {
+    background-color: $color;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+  }
+}
+
+// Season-based glyph after heading tags
+$seasons: ("winter", "spring", "summer", "fall");
+
+@mixin season-glyph($season) {
+  content: url('/path-to-your-glyphs/#{$season}.png');
+}
+
+@each $season in $seasons {
+  h1.#{$season}, h2.#{$season}, h3.#{$season} {
+    @include season-glyph($season);
+  }
+}
+
       font-size: $font-size;
       width: $width;
       background-color: $bg-color;
