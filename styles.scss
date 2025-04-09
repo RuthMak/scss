@@ -1,0 +1,93 @@
+/* Exercise 1: Interpolation and Mixin */
+@mixin button-style($font-size, $width, $bg-color, $name) {
+    .btn-#{$name} {
+      font-size: $font-size;
+      width: $width;
+      background-color: $bg-color;
+      color: purple;
+      padding: 0.5em 1em;
+      border: none;
+      border-radius: 5px;
+    }
+  }
+  
+  @include button-style(16px, 150px, lightblue, "important");
+  @include button-style(14px, 120px, lightgreen, "note");
+  
+  /* Exercise 2: Lists and nth() */
+  
+  $font-sizes: 100%, 110%, 120%, 130%, 140%;
+  
+  @mixin heading-size($level) {
+    h#{$level} {
+      font-size: nth($font-sizes, $level - 5);
+    }
+  }
+  
+  @include heading-size(6);
+  @include heading-size(7);
+  @include heading-size(8);
+  @include heading-size(9);
+  @include heading-size(10);
+  
+  /* Exercise 3: @each with list of days */
+  $days: (
+    "Monday" lightblue,
+    "Tuesday" lightgreen,
+    "Wednesday" lavender,
+    "Thursday" peachpuff,
+    "Friday" lightcoral,
+    "Saturday" lightyellow,
+    "Sunday" lightskyblue
+  );
+  
+  @each $day, $color in $days {
+    .day-#{to-lower-case($day)} {
+      background-color: $color;
+      padding: 1em;
+      margin: 0.5em 0;
+      border-radius: 10px;
+    }
+  }
+  
+  /* Exercise 4: @for loop */
+  @for $i from 1 through 10 {
+    .font#{$i} {
+      font-weight: $i * 100;
+    }
+  }
+  
+  /* Exercise 5: Maps */
+  $teams: (
+    "UConn": #002868,
+    "Purdue": #CEB888,
+    "Alabama": #9E1B32,
+    "NC State": #CC0000
+  );
+  
+  @each $team, $color in $teams {
+    .team-#{to-lower-case(str-replace($team, " ", "-"))} {
+      color: $color;
+    }
+  }
+  
+  /*Exercise 6: Season Glyphs with @each and Mixin */
+  $seasons: (
+    "spring" "🌸",
+    "summer" "☀️",
+    "autumn" "🍂",
+    "winter" "❄️"
+  );
+  
+  @mixin season-heading($season, $glyph) {
+    h1.season-#{$season}::after {
+      content: " #{$glyph}";
+      font-size: 1.2em;
+      margin-left: 0.5em;
+    }
+  }
+  
+  @each $season, $glyph in $seasons {
+    @include season-heading($season, $glyph);
+  }
+  
