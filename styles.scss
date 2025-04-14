@@ -1,103 +1,5 @@
-@mixin button-style($font-size, $width, $bg-color, $name) {
-    .btn-#{$name} {// Mixin for button styles
-@mixin btn($font-size, $width, $bg-color, $name) {
-  font-size: $font-size;
-  width: $width;
-  background-color: $bg-color;
-  color: purple;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-// Font size list
-$font-sizes: 100%, 110%, 120%, 130%, 140%;
-
-// Create button class for .btn
-.btn {
-  @include btn(16px, 200px, lightgreen, "default");
-}
-
-// Heading size mixin using nth() to get percentage values
-@mixin heading-size($level) {
-  font-size: nth($font-sizes, $level - 5);
-}
-
-// Generate headings (h6 to h10) with font sizes ranging from 100% to 140%
-@for $i from 6 through 10 {
-  h#{$i} {
-    @include heading-size($i);
-  }
-}
-
-// Create buttons with dynamic names using interpolation
-@each $name in "important", "warning", "success", "info" {
-  .btn-#{$name} {
-    @include btn(16px, 200px, 
-      if($name == "important", red, 
-        if($name == "warning", yellow, 
-          if($name == "success", green, blue))),
-      $name);
-  }
-}
-
-// Days of the week with themes
-$days: (
-  "Monday" : red,
-  "Tuesday" : blue,
-  "Wednesday" : yellow,
-  "Thursday" : green,
-  "Friday" : purple,
-  "Saturday" : orange,
-  "Sunday" : pink
-);
-
-@each $day, $color in $days {
-  .day-#{$day} {
-    background-color: $color;
-    padding: 10px;
-    border-radius: 5px;
-    color: white;
-  }
-}
-
-// Generate font-weight classes using @for
-@for $i from 1 through 10 {
-  .font#{$i} {
-    font-weight: $i * 100;
-  }
-}
-
-// Basketball team color classes using @each
-$teams: (
-  "UConn" : #004b87,
-  "Duke" : #0000ff,
-  "Kansas" : #e4002b,
-  "Michigan State" : #18453b
-);
-
-@each $team, $color in $teams {
-  .team-#{$team} {
-    background-color: $color;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-  }
-}
-
-// Season-based glyph after heading tags
-$seasons: ("winter", "spring", "summer", "fall");
-
-@mixin season-glyph($season) {
-  content: url('/path-to-your-glyphs/#{$season}.png');
-}
-
-@each $season in $seasons {
-  h1.#{$season}, h2.#{$season}, h3.#{$season} {
-    @include season-glyph($season);
-  }
-}
-
+@mixin button($font-size, $width, $bg-color, $name) {
+    .btn-#{$name} {
       font-size: $font-size;
       width: $width;
       background-color: $bg-color;
@@ -108,83 +10,76 @@ $seasons: ("winter", "spring", "summer", "fall");
     }
   }
   
-  @include button-style(16px, 150px, lightblue, "important");
-  @include button-style(14px, 120px, lightgreen, "note");
+  // Example usage:
+  // @include button(16px, 150px, blue, important);
   
-  /* Exercise 2: Lists and nth() */
-  
-  $font-sizes: 100%, 110%, 120%, 130%, 140%;
+$font-sizes: 100%, 110%, 120%, 130%, 140%;
   
   @mixin heading-size($level) {
-    h#{$level} {
-      font-size: nth($font-sizes, $level - 5);
+    font-size: nth($font-sizes, $level - 5); // Since h6 = 1st index (100%)
+  }
+  
+  // h6 to h10
+  @for $i from 6 through 10 {
+    h#{$i} {
+      @include heading-size($i);
     }
   }
   
-  @include heading-size(6);
-  @include heading-size(7);
-  @include heading-size(8);
-  @include heading-size(9);
-  @include heading-size(10);
+  $days: 
+    ("Monday", #FFCCCC), 
+    ("Tuesday", #FFE5B4), 
+    ("Wednesday", #FFFFB3), 
+    ("Thursday", #CCFFCC), 
+    ("Friday", #CCE5FF), 
+    ("Saturday", #E5CCFF), 
+    ("Sunday", #FFD9EC);
   
-  /* Exercise 3: @each with list of days */
-  $days: (
-    "Monday" lightblue,
-    "Tuesday" lightgreen,
-    "Wednesday" lavender,
-    "Thursday" peachpuff,
-    "Friday" lightcoral,
-    "Saturday" lightyellow,
-    "Sunday" lightskyblue
-  );
-  
-  @each $day, $color in $days {
-    .day-#{to-lower-case($day)} {
+  @each $day in $days {
+    $name: nth($day, 1);
+    $color: nth($day, 2);
+    .day-#{$name} {
       background-color: $color;
       padding: 1em;
-      margin: 0.5em 0;
-      border-radius: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px lighten($color, 10%);
     }
   }
-  
-  /* Exercise 4: @for loop */
+
   @for $i from 1 through 10 {
     .font#{$i} {
       font-weight: $i * 100;
     }
   }
-  
-  /* Exercise 5: Maps */
+
   $teams: (
-    "UConn": #002868,
-    "Purdue": #CEB888,
+    "UConn": #0033A0,
     "Alabama": #9E1B32,
-    "NC State": #CC0000
+    "Purdue": #CEB888,
+    "Houston": #C8102E
   );
   
   @each $team, $color in $teams {
-    .team-#{to-lower-case(str-replace($team, " ", "-"))} {
-      color: $color;
+    .team-#{$team} {
+      background-color: $color;
+      color: white;
+      padding: 1em;
+      border-radius: 4px;
     }
   }
+
+  $seasons: ("Spring": "🌸", "Summer": "☀️", "Fall": "🍂", "Winter": "❄️");
   
-  /*Exercise 6: Season Glyphs with @each and Mixin */
-  $seasons: (
-    "spring" "🌸",
-    "summer" "☀️",
-    "autumn" "🍂",
-    "winter" "❄️"
-  );
-  
-  @mixin season-heading($season, $glyph) {
-    h1.season-#{$season}::after {
-      content: " #{$glyph}";
-      font-size: 1.2em;
+  @mixin season-glyph($season) {
+    &::after {
+      content: map-get($seasons, $season);
       margin-left: 0.5em;
     }
   }
   
-  @each $season, $glyph in $seasons {
-    @include season-heading($season, $glyph);
+  @each $season, $icon in $seasons {
+    .heading-#{$season} {
+      @include season-glyph($season);
+    }
   }
   
