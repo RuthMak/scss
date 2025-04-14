@@ -16,7 +16,7 @@
 $font-sizes: 100%, 110%, 120%, 130%, 140%;
   
   @mixin heading-size($level) {
-    font-size: nth($font-sizes, $level - 5); // Since h6 = 1st index (100%)
+    font-size: nth($font-sizes, $level - 5);
   }
   
   // h6 to h10
